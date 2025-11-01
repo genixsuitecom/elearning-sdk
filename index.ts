@@ -15,6 +15,9 @@ export type { CreateCurriculumRequest } from './models/CreateCurriculumRequest.j
 export type { CreateCurriculumResponse } from './models/CreateCurriculumResponse.js';
 export type { Curriculum } from './models/Curriculum.js';
 export type { CurriculumList } from './models/CurriculumList.js';
+export type { Subject } from './models/Subject.js';
+export type { Topic } from './models/Topic.js';
+export type { LearningPoint } from './models/LearningPoint.js';
 export type { CreateExportRequest } from './models/CreateExportRequest.js';
 export type { CreateUploadRequest } from './models/CreateUploadRequest.js';
 export type { CreateUploadResponse } from './models/CreateUploadResponse.js';

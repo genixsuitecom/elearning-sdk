@@ -20,7 +20,7 @@ export type ProcessSubjectRequest = {
      * Optional curriculum to associate the subject with. If omitted, the server may attach
      * the subject to a default curriculum per business rules.
      */
-    curriculumId?: string;
+    curriculum_id?: string;
     /**
      * Optional Content sources to be ingested as part of the subject. Each must have either a `sourceId` or a direct `url`.
      */

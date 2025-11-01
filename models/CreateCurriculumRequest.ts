@@ -4,34 +4,12 @@
 /* eslint-disable */
 export type CreateCurriculumRequest = {
     /**
-     * Title of the curriculum.
+     * Human-facing name of this curriculum (e.g., "Onboarding Training v1").
      */
     title: string;
     /**
-     * List of modules in the curriculum.
+     * Optional description / who it's for / scope.
      */
-    modules: Array<{
-        /**
-         * Title of the module.
-         */
-        title: string;
-        /**
-         * Lessons within the module.
-         */
-        lessons: Array<{
-            /**
-             * Title of the lesson.
-             */
-            title?: string;
-            /**
-             * Content of the lesson (plain text or Markdown).
-             */
-            content?: string;
-        }>;
-    }>;
-    /**
-     * Arbitrary metadata key/value pairs for the curriculum.
-     */
-    metadata?: Record<string, any>;
+    description?: string | null;
 };
 

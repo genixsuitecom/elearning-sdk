@@ -87,17 +87,14 @@ await client.registerSource({ sourceId: upload.sourceId, filename: 'doc.pdf', mi
 // Optional: create a curriculum (first-class entity)
 const { curriculumId } = await client.createCurriculum({
   title: 'Onboarding Training v1',
-  modules: [
-    { title: 'Introduction', lessons: [{ title: 'Welcome', content: 'Basics' }] },
-  ],
-  metadata: { team: 'PeopleOps' }
+  description: 'New hire onboarding curriculum'
 })
 
 // Single-POST orchestration (creates subject and starts export job)
-// Associate the subject to a curriculum by passing curriculumId
+// Associate the subject to a curriculum by passing curriculum_id
 const job = await client.processSubject({
   subject: { title: 'Safety Training' },
-  curriculumId,
+  curriculum_id: curriculumId,
   sources: [{ sourceId: upload.sourceId }],
   outputs: ['pptx', 'pdf']
 }, 'idem-456')
@@ -133,3 +130,22 @@ Notes
 
 - All methods return typed results; no `any` types are used in public APIs.
 - Enable `verbose: true` to get debug logs with sensitive fields redacted.
+```mermaid
+erDiagram
+    CURRICULUM ||--|{ SUBJECT : contains
+    SUBJECT    ||--|{ TOPIC  : includes
+    TOPIC      ||--|{ POINT  : comprises
+
+    CURRICULUM {
+      string name
+    }
+    SUBJECT {
+      string name
+    }
+    TOPIC {
+      string title
+    }
+    POINT {
+      string detail
+    }
+```
