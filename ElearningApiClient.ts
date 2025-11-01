@@ -22,7 +22,6 @@
  */
 import { OpenAPI, type OpenAPIConfig } from './core/OpenAPI.js';
 import { IngestService } from './services/IngestService.js';
-import { CurriculaService } from './services/CurriculaService.js';
 import { JobsService } from './services/JobsService.js';
 import { ArtifactsService } from './services/ArtifactsService.js';
 import type { CreateUploadRequest } from './models/CreateUploadRequest.js';
@@ -32,6 +31,8 @@ import type { RegisterSourceResponse } from './models/RegisterSourceResponse.js'
 import type { CreateCurriculumRequest } from './models/CreateCurriculumRequest.js';
 import type { CreateCurriculumResponse } from './models/CreateCurriculumResponse.js';
 import type { CreateExportRequest } from './models/CreateExportRequest.js';
+import type { Curriculum } from './models/Curriculum.js';
+import type { CurriculumList } from './models/CurriculumList.js';
 import type { JobAccepted } from './models/JobAccepted.js';
 import type { ProcessSubjectRequest } from './models/ProcessSubjectRequest.js';
 import type { Job } from './models/Job.js';
@@ -39,6 +40,7 @@ import type { ArtifactList } from './models/ArtifactList.js';
 import type { ArtifactLink } from './models/ArtifactLink.js';
 import { SubjectsService } from './services/SubjectsService.js';
 import { ExportsService } from './services/ExportsService.js';
+import { CurriculumService } from './services/CurriculumService.js';
 
 export interface ElearningApiClientConfig {
   /** Base URL for the API (e.g., 'https://app.genixsuite.com') */
@@ -109,7 +111,21 @@ export class ElearningApiClient {
    * @returns Created curriculum ID
    */
   async createCurriculum(request: CreateCurriculumRequest): Promise<CreateCurriculumResponse> {
-    return CurriculaService.createCurriculum(request);
+    return CurriculumService.createCurriculum(request);
+  }
+
+  /**
+   * List all curriculums visible to the caller
+   */
+  async listCurriculums(): Promise<CurriculumList> {
+    return CurriculumService.listCurriculums();
+  }
+
+  /**
+   * Get a single curriculum by ID
+   */
+  async getCurriculum(curriculumId: string): Promise<Curriculum> {
+    return CurriculumService.getCurriculum(curriculumId);
   }
 
   /**
@@ -149,7 +165,7 @@ export class ElearningApiClient {
    */
   async createExport(request: CreateExportRequest & {
     subjectId?: string;
-    options?: { template?: any; includeImages?: boolean; theme?: any };
+    options?: { template?: unknown; includeImages?: boolean; theme?: unknown };
   }): Promise<JobAccepted> {
     return ExportsService.createExport(request as CreateExportRequest);
   }

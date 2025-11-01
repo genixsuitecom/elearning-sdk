@@ -5,50 +5,11 @@ Install
 npm i @genixsuitecom/elearning-sdk
 ```
 
-Usage
-```ts
-import { ElearningApiClient } from '@genixsuitecom/elearning-sdk'
-
-// Option A: static bearer token (e.g., client_credentials or SSO access token)
-const client = new ElearningApiClient({
-  baseUrl: 'https://app.genixsuite.com',
-  token: process.env.GENIXSUITE_API_TOKEN!,
-  verbose: true,
-})
-
-// Option B: async token resolver (rotate/refresh as needed)
-// const client = new ElearningApiClient({
-//   baseUrl: 'https://app.genixsuite.com',
-//   token: async () => {
-//     return process.env.GENIXSUITE_API_TOKEN
-//   },
-// })
-
-// Step 1: presign upload
-const upload = await client.createUpload({ filename: 'doc.pdf', mimeType: 'application/pdf', sizeBytes: 1024, sha256: '...' }, 'idem-123')
-
-// Step 2: register source
-await client.registerSource({ sourceId: upload.sourceId, filename: 'doc.pdf', mimeType: 'application/pdf', sizeBytes: 1024, sha256: '...' }, 'idem-123')
-
-// Single-POST orchestration (creates subject and starts export job)
-const job = await client.processSubject({ subject: { title: 'Safety Training' }, outputs: ['pptx', 'pdf'] }, 'idem-456')
-
-// Export from existing subject (supports all output types: pptx, pdf, jira, confluence, image, video)
-const exportJob = await client.createExport({
-  subjectId: '550e8400-e29b-41d4-a716-446655440000',
-  outputs: ['pptx', 'pdf', 'jira'],
-  options: { includeImages: true }
-})
-
-// Poll job status
-const status = await client.getJob(exportJob.jobId)
-
-// List artifacts when job completes
-const artifacts = await client.listJobArtifacts(exportJob.jobId)
-
-// Download artifact
-const link = await client.getArtifact(artifacts.items[0].id)
-```
+Rename `.env.example` to `.env`
+Enter `.env` variables from https://app.genixsuite.com/settings/api
+  - Create a client
+  - Name the client and select the scope
+  - Copy client ID and client secret to the .env file
 
 OAuth quickstart
 
@@ -96,6 +57,66 @@ async function refreshAccessToken(refreshToken: string) {
   if (!res.ok) throw new Error(`refresh error: ${res.status}`)
   return res.json() as Promise<{ access_token: string; refresh_token?: string }>
 }
+```
+
+Usage
+```ts
+import { ElearningApiClient } from '@genixsuitecom/elearning-sdk'
+
+// Option A: static bearer token (e.g., client_credentials or SSO access token)
+const client = new ElearningApiClient({
+  baseUrl: 'https://app.genixsuite.com',
+  token: process.env.GENIXSUITE_API_TOKEN!,
+  verbose: true,
+})
+
+// Option B: async token resolver (rotate/refresh as needed)
+// const client = new ElearningApiClient({
+//   baseUrl: 'https://app.genixsuite.com',
+//   token: async () => {
+//     return process.env.GENIXSUITE_API_TOKEN
+//   },
+// })
+
+// Step 1: presign upload
+const upload = await client.createUpload({ filename: 'doc.pdf', mimeType: 'application/pdf', sizeBytes: 1024, sha256: '...' }, 'idem-123')
+
+// Step 2: register source
+await client.registerSource({ sourceId: upload.sourceId, filename: 'doc.pdf', mimeType: 'application/pdf', sizeBytes: 1024, sha256: '...' }, 'idem-123')
+
+// Optional: create a curriculum (first-class entity)
+const { curriculumId } = await client.createCurriculum({
+  title: 'Onboarding Training v1',
+  modules: [
+    { title: 'Introduction', lessons: [{ title: 'Welcome', content: 'Basics' }] },
+  ],
+  metadata: { team: 'PeopleOps' }
+})
+
+// Single-POST orchestration (creates subject and starts export job)
+// Associate the subject to a curriculum by passing curriculumId
+const job = await client.processSubject({
+  subject: { title: 'Safety Training' },
+  curriculumId,
+  sources: [{ sourceId: upload.sourceId }],
+  outputs: ['pptx', 'pdf']
+}, 'idem-456')
+
+// Export from existing subject (supports all output types: pptx, pdf, jira, confluence, image, video)
+const exportJob = await client.createExport({
+  subjectId: '550e8400-e29b-41d4-a716-446655440000',
+  outputs: ['pptx', 'pdf', 'jira'],
+  options: { includeImages: true }
+})
+
+// Poll job status
+const status = await client.getJob(exportJob.jobId)
+
+// List artifacts when job completes
+const artifacts = await client.listJobArtifacts(exportJob.jobId)
+
+// Download artifact
+const link = await client.getArtifact(artifacts.items[0].id)
 ```
 
 Environment and settings
