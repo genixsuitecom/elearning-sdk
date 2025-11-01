@@ -1,6 +1,6 @@
 {
     "name": "@genixsuitecom/elearning-sdk",
-    "version": "0.1.10",
+    "version": "0.1.11",
     "description": "GenixSuite Learn API TypeScript SDK",
     "keywords": [
         "openapi",
