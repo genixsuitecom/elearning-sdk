@@ -2,13 +2,13 @@
 /* istanbul ignore file */
 /* tslint:disable */
 /* eslint-disable */
-import type { CreateUploadRequest } from '../models/CreateUploadRequest';
-import type { CreateUploadResponse } from '../models/CreateUploadResponse';
-import type { RegisterSourceRequest } from '../models/RegisterSourceRequest';
-import type { RegisterSourceResponse } from '../models/RegisterSourceResponse';
-import type { CancelablePromise } from '../core/CancelablePromise';
-import { OpenAPI } from '../core/OpenAPI';
-import { request as __request } from '../core/request';
+import type { CreateUploadRequest } from '../models/CreateUploadRequest.js';
+import type { CreateUploadResponse } from '../models/CreateUploadResponse.js';
+import type { RegisterSourceRequest } from '../models/RegisterSourceRequest.js';
+import type { RegisterSourceResponse } from '../models/RegisterSourceResponse.js';
+import type { CancelablePromise } from '../core/CancelablePromise.js';
+import { OpenAPI } from '../core/OpenAPI.js';
+import { request as __request } from '../core/request.js';
 export class SourcesService {
     /**
      * Create pre-signed upload URL

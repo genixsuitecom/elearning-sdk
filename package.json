@@ -24,13 +24,13 @@
         "training slides",
         "training videos"
     ],
-    "homepage": "https://github.com/ryanwatts-getben/elearning-ts-sdk/tree/HEAD/sdk/ts#readme",
+    "homepage": "https://github.com/genixsuitecom/elearning-sdk/tree/HEAD/sdk/ts#readme",
     "bugs": {
-        "url": "https://github.com/ryanwatts-getben/elearning-ts-sdk/issues"
+        "url": "https://github.com/genixsuitecom/elearning-sdk/issues"
     },
     "repository": {
         "type": "git",
-        "url": "git+https://github.com/ryanwatts-getben/elearning-ts-sdk.git",
+        "url": "git+https://github.com/genixsuitecom/elearning-sdk.git",
         "directory": "sdk/ts"
     },
     "license": "MIT",
@@ -65,8 +65,5 @@
         "access": "public"
     },
     "module": "dist/index.js",
-    "sideEffects": false,
-    "dependencies": {
-        "sdk-ts": "^1.0.0"
-    }
+    "sideEffects": false
 }

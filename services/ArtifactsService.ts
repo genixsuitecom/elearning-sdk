@@ -2,11 +2,11 @@
 /* istanbul ignore file */
 /* tslint:disable */
 /* eslint-disable */
-import type { ArtifactLink } from '../models/ArtifactLink';
-import type { ArtifactList } from '../models/ArtifactList';
-import type { CancelablePromise } from '../core/CancelablePromise';
-import { OpenAPI } from '../core/OpenAPI';
-import { request as __request } from '../core/request';
+import type { ArtifactLink } from '../models/ArtifactLink.js';
+import type { ArtifactList } from '../models/ArtifactList.js';
+import type { CancelablePromise } from '../core/CancelablePromise.js';
+import { OpenAPI } from '../core/OpenAPI.js';
+import { request as __request } from '../core/request.js';
 export class ArtifactsService {
     /**
      * List artifacts for a job

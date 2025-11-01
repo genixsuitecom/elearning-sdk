@@ -2,35 +2,38 @@
 /* istanbul ignore file */
 /* tslint:disable */
 /* eslint-disable */
-export { ApiError } from './core/ApiError';
-export { CancelablePromise, CancelError } from './core/CancelablePromise';
-export { OpenAPI } from './core/OpenAPI';
-export type { OpenAPIConfig } from './core/OpenAPI';
+export { ApiError } from './core/ApiError.js';
+export { CancelablePromise, CancelError } from './core/CancelablePromise.js';
+export { OpenAPI } from './core/OpenAPI.js';
+export type { OpenAPIConfig } from './core/OpenAPI.js';
 
-export type { ArtifactLink } from './models/ArtifactLink';
-export type { ArtifactList } from './models/ArtifactList';
-export type { CreateClientRequest } from './models/CreateClientRequest';
-export type { CreateClientResponse } from './models/CreateClientResponse';
-export type { CreateCurriculumRequest } from './models/CreateCurriculumRequest';
-export type { CreateCurriculumResponse } from './models/CreateCurriculumResponse';
-export type { CreateExportRequest } from './models/CreateExportRequest';
-export type { CreateUploadRequest } from './models/CreateUploadRequest';
-export type { CreateUploadResponse } from './models/CreateUploadResponse';
-export type { DeveloperClient } from './models/DeveloperClient';
-export type { IdempotencyKey } from './models/IdempotencyKey';
-export { Job } from './models/Job';
-export type { JobAccepted } from './models/JobAccepted';
-export type { Problem } from './models/Problem';
-export type { ProcessSubjectRequest } from './models/ProcessSubjectRequest';
-export type { RegisterSourceRequest } from './models/RegisterSourceRequest';
-export type { RegisterSourceResponse } from './models/RegisterSourceResponse';
-export type { RotateSecretResponse } from './models/RotateSecretResponse';
+export type { ArtifactLink } from './models/ArtifactLink.js';
+export type { ArtifactList } from './models/ArtifactList.js';
+export type { CreateClientRequest } from './models/CreateClientRequest.js';
+export type { CreateClientResponse } from './models/CreateClientResponse.js';
+export type { CreateCurriculumRequest } from './models/CreateCurriculumRequest.js';
+export type { CreateCurriculumResponse } from './models/CreateCurriculumResponse.js';
+export type { CreateExportRequest } from './models/CreateExportRequest.js';
+export type { CreateUploadRequest } from './models/CreateUploadRequest.js';
+export type { CreateUploadResponse } from './models/CreateUploadResponse.js';
+export type { DeveloperClient } from './models/DeveloperClient.js';
+export type { IdempotencyKey } from './models/IdempotencyKey.js';
+export { Job } from './models/Job.js';
+export type { JobAccepted } from './models/JobAccepted.js';
+export type { Problem } from './models/Problem.js';
+export type { ProcessSubjectRequest } from './models/ProcessSubjectRequest.js';
+export type { RegisterSourceRequest } from './models/RegisterSourceRequest.js';
+export type { RegisterSourceResponse } from './models/RegisterSourceResponse.js';
+export type { RotateSecretResponse } from './models/RotateSecretResponse.js';
 
-export { ArtifactsService } from './services/ArtifactsService';
-export { AuthService } from './services/AuthService';
-export { ClientManagementService } from './services/ClientManagementService';
-export { CurriculumsService } from './services/CurriculumsService';
-export { ExportsService } from './services/ExportsService';
-export { JobsService } from './services/JobsService';
-export { SourcesService } from './services/SourcesService';
-export { SubjectsService } from './services/SubjectsService';
+export { ArtifactsService } from './services/ArtifactsService.js';
+export { AuthService } from './services/AuthService.js';
+export { ClientManagementService } from './services/ClientManagementService.js';
+export { CurriculumsService } from './services/CurriculumsService.js';
+export { ExportsService } from './services/ExportsService.js';
+export { JobsService } from './services/JobsService.js';
+export { SourcesService } from './services/SourcesService.js';
+export { SubjectsService } from './services/SubjectsService.js';
+
+// High-level client wrapper
+export { ElearningApiClient, type ElearningApiClientConfig } from './ElearningApiClient.js';

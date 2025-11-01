@@ -2,8 +2,8 @@
 /* istanbul ignore file */
 /* tslint:disable */
 /* eslint-disable */
-import type { ArtifactList } from './ArtifactList';
-import type { Problem } from './Problem';
+import type { ArtifactList } from './ArtifactList.js';
+import type { Problem } from './Problem.js';
 export type Job = {
     /**
      * Job identifier.

@@ -2,11 +2,11 @@
 /* istanbul ignore file */
 /* tslint:disable */
 /* eslint-disable */
-import type { CreateCurriculumRequest } from '../models/CreateCurriculumRequest';
-import type { CreateCurriculumResponse } from '../models/CreateCurriculumResponse';
-import type { CancelablePromise } from '../core/CancelablePromise';
-import { OpenAPI } from '../core/OpenAPI';
-import { request as __request } from '../core/request';
+import type { CreateCurriculumRequest } from '../models/CreateCurriculumRequest.js';
+import type { CreateCurriculumResponse } from '../models/CreateCurriculumResponse.js';
+import type { CancelablePromise } from '../core/CancelablePromise.js';
+import { OpenAPI } from '../core/OpenAPI.js';
+import { request as __request } from '../core/request.js';
 export class CurriculumsService {
     /**
      * Create a curriculum definition

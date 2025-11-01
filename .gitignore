@@ -1,2 +1,5 @@
 node_modules/
 .env
+genixsuitecom-elearning-sdk-0.1.10.tgz
+dist/
+*.tgz

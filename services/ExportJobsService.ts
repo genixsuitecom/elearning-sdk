@@ -2,14 +2,14 @@
 /* istanbul ignore file */
 /* tslint:disable */
 /* eslint-disable */
-import type { ArtifactList } from '../models/ArtifactList';
-import type { CreateExportRequest } from '../models/CreateExportRequest';
-import type { Job } from '../models/Job';
-import type { JobAccepted } from '../models/JobAccepted';
-import type { ProcessSubjectRequest } from '../models/ProcessSubjectRequest';
-import type { CancelablePromise } from '../core/CancelablePromise';
-import { OpenAPI } from '../core/OpenAPI';
-import { request as __request } from '../core/request';
+import type { ArtifactList } from '../models/ArtifactList.js';
+import type { CreateExportRequest } from '../models/CreateExportRequest.js';
+import type { Job } from '../models/Job.js';
+import type { JobAccepted } from '../models/JobAccepted.js';
+import type { ProcessSubjectRequest } from '../models/ProcessSubjectRequest.js';
+import type { CancelablePromise } from '../core/CancelablePromise.js';
+import { OpenAPI } from '../core/OpenAPI.js';
+import { request as __request } from '../core/request.js';
 export class ExportJobsService {
     /**
      * Create an export job from a subject or curriculum

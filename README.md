@@ -7,7 +7,7 @@ npm i @genixsuitecom/elearning-sdk
 
 Usage
 ```ts
-import { ElearningApiClient } from './index'
+import { ElearningApiClient } from '@genixsuitecom/elearning-sdk'
 
 // Option A: static bearer token (e.g., client_credentials or SSO access token)
 const client = new ElearningApiClient({

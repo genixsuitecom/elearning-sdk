@@ -2,13 +2,13 @@
 /* istanbul ignore file */
 /* tslint:disable */
 /* eslint-disable */
-import type { CreateClientRequest } from '../models/CreateClientRequest';
-import type { CreateClientResponse } from '../models/CreateClientResponse';
-import type { DeveloperClient } from '../models/DeveloperClient';
-import type { RotateSecretResponse } from '../models/RotateSecretResponse';
-import type { CancelablePromise } from '../core/CancelablePromise';
-import { OpenAPI } from '../core/OpenAPI';
-import { request as __request } from '../core/request';
+import type { CreateClientRequest } from '../models/CreateClientRequest.js';
+import type { CreateClientResponse } from '../models/CreateClientResponse.js';
+import type { DeveloperClient } from '../models/DeveloperClient.js';
+import type { RotateSecretResponse } from '../models/RotateSecretResponse.js';
+import type { CancelablePromise } from '../core/CancelablePromise.js';
+import { OpenAPI } from '../core/OpenAPI.js';
+import { request as __request } from '../core/request.js';
 export class ClientManagementService {
     /**
      * List OAuth clients

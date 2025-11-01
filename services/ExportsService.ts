@@ -2,11 +2,11 @@
 /* istanbul ignore file */
 /* tslint:disable */
 /* eslint-disable */
-import type { CreateExportRequest } from '../models/CreateExportRequest';
-import type { JobAccepted } from '../models/JobAccepted';
-import type { CancelablePromise } from '../core/CancelablePromise';
-import { OpenAPI } from '../core/OpenAPI';
-import { request as __request } from '../core/request';
+import type { CreateExportRequest } from '../models/CreateExportRequest.js';
+import type { JobAccepted } from '../models/JobAccepted.js';
+import type { CancelablePromise } from '../core/CancelablePromise.js';
+import { OpenAPI } from '../core/OpenAPI.js';
+import { request as __request } from '../core/request.js';
 export class ExportsService {
     /**
      * Create an export job

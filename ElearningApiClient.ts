@@ -20,25 +20,25 @@
  * }, 'idem-123')
  * ```
  */
-import { OpenAPI, type OpenAPIConfig } from './core/OpenAPI';
-import { IngestService } from './services/IngestService';
-import { CurriculaService } from './services/CurriculaService';
-import { JobsService } from './services/JobsService';
-import { ArtifactsService } from './services/ArtifactsService';
-import type { CreateUploadRequest } from './models/CreateUploadRequest';
-import type { CreateUploadResponse } from './models/CreateUploadResponse';
-import type { RegisterSourceRequest } from './models/RegisterSourceRequest';
-import type { RegisterSourceResponse } from './models/RegisterSourceResponse';
-import type { CreateCurriculumRequest } from './models/CreateCurriculumRequest';
-import type { CreateCurriculumResponse } from './models/CreateCurriculumResponse';
-import type { CreateExportRequest } from './models/CreateExportRequest';
-import type { JobAccepted } from './models/JobAccepted';
-import type { ProcessSubjectRequest } from './models/ProcessSubjectRequest';
-import type { Job } from './models/Job';
-import type { ArtifactList } from './models/ArtifactList';
-import type { ArtifactLink } from './models/ArtifactLink';
-import { SubjectsService } from './services/SubjectsService';
-import { ExportsService } from './services/ExportsService';
+import { OpenAPI, type OpenAPIConfig } from './core/OpenAPI.js';
+import { IngestService } from './services/IngestService.js';
+import { CurriculaService } from './services/CurriculaService.js';
+import { JobsService } from './services/JobsService.js';
+import { ArtifactsService } from './services/ArtifactsService.js';
+import type { CreateUploadRequest } from './models/CreateUploadRequest.js';
+import type { CreateUploadResponse } from './models/CreateUploadResponse.js';
+import type { RegisterSourceRequest } from './models/RegisterSourceRequest.js';
+import type { RegisterSourceResponse } from './models/RegisterSourceResponse.js';
+import type { CreateCurriculumRequest } from './models/CreateCurriculumRequest.js';
+import type { CreateCurriculumResponse } from './models/CreateCurriculumResponse.js';
+import type { CreateExportRequest } from './models/CreateExportRequest.js';
+import type { JobAccepted } from './models/JobAccepted.js';
+import type { ProcessSubjectRequest } from './models/ProcessSubjectRequest.js';
+import type { Job } from './models/Job.js';
+import type { ArtifactList } from './models/ArtifactList.js';
+import type { ArtifactLink } from './models/ArtifactLink.js';
+import { SubjectsService } from './services/SubjectsService.js';
+import { ExportsService } from './services/ExportsService.js';
 
 export interface ElearningApiClientConfig {
   /** Base URL for the API (e.g., 'https://app.genixsuite.com') */
