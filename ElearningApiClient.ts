@@ -8,7 +8,7 @@
  * ```ts
  * const client = new ElearningApiClient({
  *   baseUrl: 'https://app.genixsuite.com',
- *   token: process.env.API_TOKEN!,
+ *   token: process.env.GENIXSUITE_API_TOKEN!,
  *   verbose: true,
  * })
  * 

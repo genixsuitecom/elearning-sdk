@@ -2,7 +2,7 @@
 
 Install
 ```bash
-npm install --save sdk-ts
+npm i @genixsuitecom/elearning-sdk
 ```
 
 Usage
@@ -12,7 +12,7 @@ import { ElearningApiClient } from './index'
 // Option A: static bearer token (e.g., client_credentials or SSO access token)
 const client = new ElearningApiClient({
   baseUrl: 'https://app.genixsuite.com',
-  token: process.env.API_TOKEN!,
+  token: process.env.GENIXSUITE_API_TOKEN!,
   verbose: true,
 })
 
@@ -20,7 +20,7 @@ const client = new ElearningApiClient({
 // const client = new ElearningApiClient({
 //   baseUrl: 'https://app.genixsuite.com',
 //   token: async () => {
-//     return process.env.API_TOKEN
+//     return process.env.GENIXSUITE_API_TOKEN
 //   },
 // })
 
@@ -61,8 +61,8 @@ async function getClientCredentialsToken() {
   const body = new URLSearchParams({
     grant_type: 'client_credentials',
     scope: 'jobs:read',
-    client_id: process.env.CLIENT_ID!,
-    client_secret: process.env.CLIENT_SECRET!,
+    client_id: process.env.GENIXSUITE_CLIENT_ID!,
+    client_secret: process.env.GENIXSUITE_CLIENT_SECRET!,
   })
   const res = await fetch(url, {
     method: 'POST',
