@@ -7,6 +7,9 @@ import type { ApiRequestOptions } from './ApiRequestOptions.js';
 type Resolver<T> = (options: ApiRequestOptions) => Promise<T>;
 type Headers = Record<string, string>;
 
+export type RequestInterceptor = (info: { url: string; init: RequestInit; options: ApiRequestOptions }) => { url?: string; init?: RequestInit } | void;
+export type ResponseInterceptor = (info: { response: Response; url: string; options: ApiRequestOptions }) => void;
+
 export type OpenAPIConfig = {
     BASE: string;
     VERSION: string;
@@ -17,6 +20,10 @@ export type OpenAPIConfig = {
     PASSWORD?: string | Resolver<string> | undefined;
     HEADERS?: Headers | Resolver<Headers> | undefined;
     ENCODE_PATH?: ((path: string) => string) | undefined;
+    INTERCEPTORS?: {
+        request?: RequestInterceptor[];
+        response?: ResponseInterceptor[];
+    } | undefined;
 };
 
 export const OpenAPI: OpenAPIConfig = {
@@ -29,4 +36,5 @@ export const OpenAPI: OpenAPIConfig = {
     PASSWORD: undefined,
     HEADERS: undefined,
     ENCODE_PATH: undefined,
+    INTERCEPTORS: { request: [], response: [] },
 };

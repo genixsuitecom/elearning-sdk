@@ -44,6 +44,9 @@
     },
     "main": "dist/index.js",
     "types": "dist/index.d.ts",
+    "bin": {
+        "elearning-sdk": "./dist/examples/doctor.js"
+    },
     "files": [
         "dist",
         "README.md",
@@ -52,11 +55,20 @@
     "scripts": {
         "build": "tsc -p tsconfig.json",
         "clean": "rimraf dist || rm -rf dist",
-        "prepublishOnly": "npm run clean && npm run build"
+        "prepublishOnly": "npm run clean && npm run build",
+        "typecheck": "tsc -p tsconfig.json --noEmit",
+        "test:types": "tsd",
+        "lint": "eslint . --ext .ts",
+        "lint:fix": "eslint . --ext .ts --fix"
     },
     "devDependencies": {
         "@types/node": "^24.9.2",
+        "@typescript-eslint/eslint-plugin": "^7.18.0",
+        "@typescript-eslint/parser": "^7.18.0",
+        "eslint": "^8.57.0",
+        "eslint-plugin-promise": "^6.1.1",
         "rimraf": "^6.0.1",
+        "tsd": "^0.31.2",
         "typescript": "^5.0.0"
     },
     "engines": {
@@ -68,6 +80,7 @@
     "module": "dist/index.js",
     "sideEffects": false,
     "dependencies": {
-        "dotenv": "^17.2.3"
+        "dotenv": "^17.2.3",
+        "zod": "^4.1.12"
     }
 }

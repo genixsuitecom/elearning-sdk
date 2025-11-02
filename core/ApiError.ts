@@ -9,7 +9,8 @@ export class ApiError extends Error {
     public readonly url: string;
     public readonly status: number;
     public readonly statusText: string;
-    public readonly body: any;
+    public readonly body: unknown;
+    public readonly headers?: Record<string, string>;
     public readonly request: ApiRequestOptions;
 
     constructor(request: ApiRequestOptions, response: ApiResult, message: string) {
@@ -20,6 +21,7 @@ export class ApiError extends Error {
         this.status = response.status;
         this.statusText = response.statusText;
         this.body = response.body;
+        this.headers = response.headers;
         this.request = request;
     }
 }
