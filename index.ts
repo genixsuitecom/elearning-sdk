@@ -6,6 +6,9 @@ export { ApiError } from './core/ApiError.js';
 export { CancelablePromise, CancelError } from './core/CancelablePromise.js';
 export { OpenAPI } from './core/OpenAPI.js';
 export type { OpenAPIConfig } from './core/OpenAPI.js';
+export type { RequestInterceptor, ResponseInterceptor } from './core/OpenAPI.js';
+export type { ApiResult } from './core/ApiResultTyped.js';
+export * as Schemas from './schemas/index.js';
 
 export type { ArtifactLink } from './models/ArtifactLink.js';
 export type { ArtifactList } from './models/ArtifactList.js';
@@ -42,3 +45,9 @@ export { SubjectsService } from './services/SubjectsService.js';
 
 // High-level client wrapper
 export { ElearningApiClient, type ElearningApiClientConfig } from './ElearningApiClient.js';
+
+// Consumer-facing type aliases for export customization
+export type { ExportTemplate, ExportTheme, ExportOptions } from './types/index.js';
+
+// Utilities for consumers
+export { waitForJob, getEnv } from './examples/util/utils.js';

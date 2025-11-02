@@ -1,17 +1,18 @@
 /**
  * ElearningApiClient - Unified client wrapper for the GenixSuite Learn API v1
- * 
+ *
  * Provides a simplified interface over the generated service classes, handling
  * authentication, base URL configuration, and idempotency keys automatically.
- * 
+ *
  * @example
  * ```ts
  * const client = new ElearningApiClient({
  *   baseUrl: 'https://app.genixsuite.com',
  *   token: process.env.GENIXSUITE_API_TOKEN!,
  *   verbose: true,
+ *   validateResponses: true,
  * })
- * 
+ *
  * const upload = await client.createUpload({
  *   filename: 'doc.pdf',
  *   mimeType: 'application/pdf',
@@ -20,7 +21,7 @@
  * }, 'idem-123')
  * ```
  */
-import { OpenAPI, type OpenAPIConfig } from './core/OpenAPI.js';
+import { OpenAPI } from './core/OpenAPI.js';
 import { IngestService } from './services/IngestService.js';
 import { JobsService } from './services/JobsService.js';
 import { ArtifactsService } from './services/ArtifactsService.js';
@@ -41,39 +42,105 @@ import type { ArtifactLink } from './models/ArtifactLink.js';
 import { SubjectsService } from './services/SubjectsService.js';
 import { ExportsService } from './services/ExportsService.js';
 import { CurriculumService } from './services/CurriculumService.js';
+import {
+  ArtifactLinkSchema,
+  ArtifactListSchema,
+  CreateCurriculumResponseSchema,
+  CreateUploadResponseSchema,
+  CurriculumListSchema,
+  CurriculumSchema,
+  JobAcceptedSchema,
+  JobSchema,
+  RegisterSourceResponseSchema,
+} from './schemas/index.js';
+import type { RequestInterceptor, ResponseInterceptor } from './core/OpenAPI.js';
+import type { ApiRequestOptions } from './core/ApiRequestOptions.js';
 
-export interface ElearningApiClientConfig {
-  /** Base URL for the API (e.g., 'https://app.genixsuite.com') */
+export type ElearningApiClientConfig = {
+  /** Base URL of the API, e.g. https://app.genixsuite.com */
   baseUrl: string;
-  /** Bearer token or async function that returns a token */
-  token: string | (() => Promise<string>);
-  /** Enable verbose logging (redacts sensitive fields) */
+  /** Bearer token or async supplier */
+  token: string | (() => string | Promise<string>);
+  /** Enable verbose request/response logging */
   verbose?: boolean;
-}
+  /** Enable Zod validation of responses in high-level helpers */
+  validateResponses?: boolean;
+  /** Optional request interceptors applied before fetch */
+  requestInterceptors?: ReadonlyArray<RequestInterceptor>;
+  /** Optional response interceptors applied after fetch */
+  responseInterceptors?: ReadonlyArray<ResponseInterceptor>;
+};
 
 /**
  * Unified client for the GenixSuite Learn API v1
  */
 export class ElearningApiClient {
   private config: ElearningApiClientConfig;
+  private cachedToken?: string;
 
   constructor(config: ElearningApiClientConfig) {
     this.config = config;
 
     // Configure OpenAPI base URL
-    OpenAPI.BASE = config.baseUrl;
+    OpenAPI.BASE = this.config.baseUrl.replace(/\/+$/, '');
 
     // Configure token resolver
-    if (typeof config.token === 'string') {
-      OpenAPI.TOKEN = config.token;
-    } else {
-      OpenAPI.TOKEN = config.token;
-    }
+    OpenAPI.TOKEN = async (_options: ApiRequestOptions): Promise<string> => {
+      if (typeof this.config.token === 'string') {
+        return this.config.token;
+      }
+      // lightweight cache (no expiry handling here)
+      if (!this.cachedToken) {
+        const supplied = await this.config.token();
+        this.cachedToken = supplied;
+      }
+      return this.cachedToken ?? '';
+    };
 
-    if (config.verbose) {
-      // Verbose logging would be implemented here if needed
-      // For now, we rely on the underlying request library
-    }
+    // Interceptors: user-provided and optional verbose logging
+    const redacted = (h: Headers | Record<string, string> | string[][] | undefined): Record<string, string> | undefined => {
+      if (!h) return undefined;
+      const out: Record<string, string> = {};
+      let entries: Array<[string, string]>;
+      if (h instanceof Headers) {
+        entries = Array.from(h as unknown as Iterable<[string, string]>);
+      } else if (Array.isArray(h)) {
+        entries = h as Array<[string, string]>;
+      } else {
+        entries = Object.entries(h as Record<string, string>);
+      }
+      for (const [k, v] of entries) {
+        const key = k.toLowerCase();
+        out[k] = ['authorization', 'proxy-authorization', 'x-api-key'].includes(key) ? '<redacted>' : v;
+      }
+      return out;
+    };
+
+    const requestLog: RequestInterceptor = (info) => {
+      if (this.config.verbose) {
+        // eslint-disable-next-line no-console
+        console.log('[SDK][request]', info.init?.method ?? 'GET', info.url, { headers: redacted(info.init?.headers as Record<string, string>) });
+      }
+    };
+
+    const responseLog: ResponseInterceptor = (info) => {
+      if (this.config.verbose) {
+        // eslint-disable-next-line no-console
+        console.log('[SDK][response]', info.response.status, info.url, { headers: redacted(info.response.headers) });
+      }
+    };
+
+    OpenAPI.INTERCEPTORS = OpenAPI.INTERCEPTORS || { request: [], response: [] };
+    OpenAPI.INTERCEPTORS.request = [
+      ...(OpenAPI.INTERCEPTORS.request ?? []),
+      ...(this.config.requestInterceptors ?? []),
+      requestLog,
+    ];
+    OpenAPI.INTERCEPTORS.response = [
+      ...(OpenAPI.INTERCEPTORS.response ?? []),
+      ...(this.config.responseInterceptors ?? []),
+      responseLog,
+    ];
   }
 
   /**
@@ -87,7 +154,9 @@ export class ElearningApiClient {
     request: CreateUploadRequest,
     idempotencyKey?: string
   ): Promise<CreateUploadResponse> {
-    return IngestService.createUpload(request, idempotencyKey);
+    const key = idempotencyKey ?? (globalThis.crypto?.randomUUID?.() ?? `${Date.now()}-${Math.random()}`);
+    const raw = await IngestService.createUpload(request, key);
+    return this.config.validateResponses ? CreateUploadResponseSchema.parse(raw) : raw;
   }
 
   /**
@@ -101,7 +170,9 @@ export class ElearningApiClient {
     request: RegisterSourceRequest,
     idempotencyKey?: string
   ): Promise<RegisterSourceResponse> {
-    return IngestService.registerSource(request, idempotencyKey);
+    const key = idempotencyKey ?? (globalThis.crypto?.randomUUID?.() ?? `${Date.now()}-${Math.random()}`);
+    const raw = await IngestService.registerSource(request, key);
+    return this.config.validateResponses ? RegisterSourceResponseSchema.parse(raw) : raw;
   }
 
   /**
@@ -111,21 +182,24 @@ export class ElearningApiClient {
    * @returns Created curriculum ID
    */
   async createCurriculum(request: CreateCurriculumRequest): Promise<CreateCurriculumResponse> {
-    return CurriculumService.createCurriculum(request);
+    const raw = await CurriculumService.createCurriculum(request);
+    return this.config.validateResponses ? CreateCurriculumResponseSchema.parse(raw) : raw;
   }
 
   /**
    * List all curriculums visible to the caller
    */
   async listCurriculums(): Promise<CurriculumList> {
-    return CurriculumService.listCurriculums();
+    const raw = await CurriculumService.listCurriculums();
+    return this.config.validateResponses ? CurriculumListSchema.parse(raw) : raw;
   }
 
   /**
    * Get a single curriculum by ID
    */
   async getCurriculum(curriculumId: string): Promise<Curriculum> {
-    return CurriculumService.getCurriculum(curriculumId);
+    const raw = await CurriculumService.getCurriculum(curriculumId);
+    return this.config.validateResponses ? CurriculumSchema.parse(raw) : raw;
   }
 
   /**
@@ -139,7 +213,9 @@ export class ElearningApiClient {
     request: ProcessSubjectRequest,
     idempotencyKey?: string
   ): Promise<JobAccepted> {
-    return SubjectsService.processSubject(request, idempotencyKey);
+    const key = idempotencyKey ?? (globalThis.crypto?.randomUUID?.() ?? `${Date.now()}-${Math.random()}`);
+    const raw = await SubjectsService.processSubject(request, key);
+    return this.config.validateResponses ? JobAcceptedSchema.parse(raw) : raw;
   }
 
   /**
@@ -163,11 +239,15 @@ export class ElearningApiClient {
    * })
    * ```
    */
-  async createExport(request: CreateExportRequest & {
-    subjectId?: string;
-    options?: { template?: unknown; includeImages?: boolean; theme?: unknown };
-  }): Promise<JobAccepted> {
-    return ExportsService.createExport(request as CreateExportRequest);
+  async createExport(request: (
+    (CreateExportRequest & { subjectId: string; curriculumId?: never; options?: { template?: unknown; includeImages?: boolean; theme?: unknown } }) |
+    (CreateExportRequest & { curriculumId: string; subjectId?: never; options?: { template?: unknown; includeImages?: boolean; theme?: unknown } })
+  )): Promise<JobAccepted> {
+    if (('subjectId' in request) && ('curriculumId' in request)) {
+      throw new Error('Provide either subjectId or curriculumId, not both');
+    }
+    const raw = await ExportsService.createExport(request as CreateExportRequest);
+    return this.config.validateResponses ? JobAcceptedSchema.parse(raw) : raw;
   }
 
   /**
@@ -177,7 +257,8 @@ export class ElearningApiClient {
    * @returns Job status, progress, stage, and artifacts
    */
   async getJob(jobId: string): Promise<Job> {
-    return JobsService.getJobStatus(jobId);
+    const raw = await JobsService.getJobStatus(jobId);
+    return this.config.validateResponses ? JobSchema.parse(raw) : raw;
   }
 
   /**
@@ -186,7 +267,8 @@ export class ElearningApiClient {
    * @param jobId - Job identifier to cancel
    */
   async cancelJob(jobId: string, idempotencyKey?: string): Promise<string> {
-    return JobsService.cancelJob(jobId, idempotencyKey);
+    const key = idempotencyKey ?? (globalThis.crypto?.randomUUID?.() ?? `${Date.now()}-${Math.random()}`);
+    return JobsService.cancelJob(jobId, key);
   }
 
   /**
@@ -196,7 +278,8 @@ export class ElearningApiClient {
    * @returns List of artifacts with metadata
    */
   async listJobArtifacts(jobId: string, ifNoneMatch?: string): Promise<ArtifactList> {
-    return JobsService.listJobArtifacts(jobId, ifNoneMatch);
+    const raw = await JobsService.listJobArtifacts(jobId, ifNoneMatch);
+    return this.config.validateResponses ? ArtifactListSchema.parse(raw) : raw;
   }
 
   /**
@@ -206,7 +289,8 @@ export class ElearningApiClient {
    * @returns Download URL and expiration time
    */
   async getArtifact(artifactId: string): Promise<ArtifactLink> {
-    return ArtifactsService.getArtifactLink(artifactId);
+    const raw = await ArtifactsService.getArtifactLink(artifactId);
+    return this.config.validateResponses ? ArtifactLinkSchema.parse(raw) : raw;
   }
 }
 

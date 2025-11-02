@@ -12,7 +12,7 @@ export class PlatformService {
      * @returns any OK
      * @throws ApiError
      */
-    public static openIdConfiguration(): CancelablePromise<any> {
+    public static openIdConfiguration(): CancelablePromise<unknown> {
         return __request(OpenAPI, {
             method: 'GET',
             url: '/.well-known/openid-configuration',
@@ -24,7 +24,7 @@ export class PlatformService {
      * @returns any OK
      * @throws ApiError
      */
-    public static jwks(): CancelablePromise<any> {
+    public static jwks(): CancelablePromise<unknown> {
         return __request(OpenAPI, {
             method: 'GET',
             url: '/.well-known/jwks.json',

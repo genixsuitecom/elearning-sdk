@@ -1,4 +1,4 @@
-import { ElearningApiClient } from '@genixsuitecom/elearning-sdk'
+import { ElearningApiClient } from './ElearningApiClient.js'
 import dotenv from 'dotenv'
 import { setTimeout as delay } from 'node:timers/promises'
 
@@ -125,7 +125,7 @@ async function getClientCredentialsToken(cfg: { baseUrl: string; clientId: strin
     throw lastErr instanceof Error ? lastErr : new Error(String(lastErr))
 }
 
-export async function createElearningClient(): Promise<ElearningApiClient> {
+async function createClient(): Promise<{ client: ElearningApiClient }> {
     requireNode(18)
     const cfg = loadEnv()
     const token = await getClientCredentialsToken({
@@ -136,25 +136,9 @@ export async function createElearningClient(): Promise<ElearningApiClient> {
         timeoutMs: cfg.timeoutMs,
         maxRetries: cfg.maxRetries,
     })
-    return new ElearningApiClient({ baseUrl: cfg.baseUrl, token })
+    return { client: new ElearningApiClient({ baseUrl: cfg.baseUrl, token, verbose: DEBUG }) }
 }
 
-async function main(): Promise<void> {
-    if (process.env.HTTPS_PROXY || process.env.HTTP_PROXY) {
-        log.debug('Proxy detected via env', { HTTPS_PROXY: process.env.HTTPS_PROXY ? 'set' : 'unset', HTTP_PROXY: process.env.HTTP_PROXY ? 'set' : 'unset' })
-    }
-    log.info('Environment', { node: process.versions.node, platform: process.platform, arch: process.arch })
-
-    const client = await createElearningClient()
-    log.info('SDK client initialized')
-    // Next: call one of the SDK methods here...
-}
-
-main().catch((e: unknown) => {
-    const message = e instanceof Error ? e.message : String(e)
-    log.error('Startup failed', { message })
-    process.exitCode = 1
-})
-
-export { loadEnv, createElearningClient as createClient }
+export { loadEnv, createClient }
 export type { Env }
+export type { ElearningApiClient as ElearningApiClient }
